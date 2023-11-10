@@ -1,0 +1,126 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "virtualMachines_espo1_name": {
+      "defaultValue": "espo1",
+      "type": "String"
+    },
+    "disks_espo1_OsDisk_1_dd735069932d4fa0b454edd628e708e6_externalid": {
+      "defaultValue": "/subscriptions/39a0d196-8aad-4373-8a42-4fb88d02c0aa/resourceGroups/SH-CRM/providers/Microsoft.Compute/disks/espo1_OsDisk_1_dd735069932d4fa0b454edd628e708e6",
+      "type": "String"
+    },
+    "disks_Espo1_DataDisk_0_externalid": {
+      "defaultValue": "/subscriptions/39a0d196-8aad-4373-8a42-4fb88d02c0aa/resourceGroups/ESPO1_GROUP/providers/Microsoft.Compute/disks/Espo1_DataDisk_0",
+      "type": "String"
+    },
+    "networkInterfaces_espo1242_z1_externalid": {
+      "defaultValue": "/subscriptions/39a0d196-8aad-4373-8a42-4fb88d02c0aa/resourceGroups/SH-CRM/providers/Microsoft.Network/networkInterfaces/espo1242_z1",
+      "type": "String"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2023-03-01",
+      "name": "[parameters('virtualMachines_espo1_name')]",
+      "location": "centralindia",
+      "tags": {
+        "environment": "test"
+      },
+      "zones": ["1"],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_B2als_v2"
+        },
+        "additionalCapabilities": {
+          "hibernationEnabled": false
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "canonical",
+            "offer": "0001-com-ubuntu-server-focal",
+            "sku": "20_04-lts-gen2",
+            "version": "latest"
+          },
+          "osDisk": {
+            "osType": "Linux",
+            "name": "[concat(parameters('virtualMachines_espo1_name'), '_OsDisk_1_dd735069932d4fa0b454edd628e708e6')]",
+            "createOption": "FromImage",
+            "caching": "ReadWrite",
+            "managedDisk": {
+              "storageAccountType": "Premium_LRS",
+              "id": "[parameters('disks_espo1_OsDisk_1_dd735069932d4fa0b454edd628e708e6_externalid')]"
+            },
+            "deleteOption": "Delete",
+            "diskSizeGB": 30
+          },
+          "dataDisks": [
+            {
+              "lun": 1,
+              "name": "Espo1_DataDisk_0",
+              "createOption": "Attach",
+              "caching": "ReadOnly",
+              "writeAcceleratorEnabled": false,
+              "managedDisk": {
+                "storageAccountType": "Premium_LRS",
+                "id": "[parameters('disks_Espo1_DataDisk_0_externalid')]"
+              },
+              "deleteOption": "Detach",
+              "diskSizeGB": 4,
+              "toBeDetached": false
+            }
+          ],
+          "diskControllerType": "SCSI"
+        },
+        "osProfile": {
+          "computerName": "[parameters('virtualMachines_espo1_name')]",
+          "adminUsername": "azureuser",
+          "linuxConfiguration": {
+            "disablePasswordAuthentication": true,
+            "ssh": {
+              "publicKeys": [
+                {
+                  "path": "/home/azureuser/.ssh/authorized_keys",
+                  "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDwChV07zGSj+nbp0chVmMoZk5oPDoeGVvvJzcYo0wiQA3njpZd9b3SHonjThLPt7IJf+vXnhsrBMQ+kkmjTtCre8oTLurF0hvTXTvHw5AbDbe7S9u5uj/rulNJKQmYVbUK3aUqEWjlFYgaYM82xbv11RtcCYpZmXLh6QQFbn4wQqQUysvPHa9fM/xHngbRnnovNjbPhoOw3CxCeBGnCZhbuC+DCpMTjlAq7pQVQZeZxQrm3+nC6ahUK4pEGTdJBMLD/EUf9Gm4ABt/2aO7RU68mOqM8XRuOPiBoxaG1P+DENSQja53dw0BMxWXlX1oexUV/bSb8omT71kS3OzAsv1UvYf8Fiyso9WxEdDBNB4bgZKNrNwCV3jRBylEsO1fLII54vdDnAkpyzcNj1NvvuXMbYANzj73FkzrpjcAiRfsRLOuLPeULmhc+Tjh4a8SVNSMTUvcJ4P4DYOuW6B4QAh3GIVeStr5DsCc6zQArfBi17QCY0NUT8IHdcMs5LLMK4U= generated-by-azure"
+                }
+              ]
+            },
+            "provisionVMAgent": true,
+            "patchSettings": {
+              "patchMode": "ImageDefault",
+              "assessmentMode": "ImageDefault"
+            },
+            "enableVMAgentPlatformUpdates": false
+          },
+          "secrets": [],
+          "allowExtensionOperations": true,
+          "requireGuestProvisionSignal": true
+        },
+        "securityProfile": {
+          "uefiSettings": {
+            "secureBootEnabled": true,
+            "vTpmEnabled": true
+          },
+          "securityType": "TrustedLaunch"
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[parameters('networkInterfaces_espo1242_z1_externalid')]",
+              "properties": {
+                "deleteOption": "Detach"
+              }
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": true
+          }
+        }
+      }
+    }
+  ]
+}
