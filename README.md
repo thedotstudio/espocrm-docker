@@ -18,6 +18,7 @@
     - `sudo unlink /etc/nginx/sites-enabled/default` - unlink default nginx conf
     - `sudo service nginx restart`
     - now if you go the url, it will be breaking because nothing is running at 8080
+    - run `htop` to monitor
 - run `docker compose up -d` and check `curl http://localhost:8080` if it is returning a non-trivial response. 
 - go to the url now and you should see the Espo running. login with username - `admin` and password - `password`
 
