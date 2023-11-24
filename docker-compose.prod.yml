@@ -1,19 +1,11 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: alpine:latest
-    command: sh -c "apk update && apk add openssh-client && while true; do ssh -i ~/modify/.ssh/espo1/key.pem -o StrictHostKeyChecking=no -nNT -L 127.0.0.1:3306:espomysql.mysql.database.azure.com:3306 azureuser@98.70.27.116;done"
-    volumes:
-      - ~/.ssh:/root/modify/.ssh:ro
-    expose:
-      - 3306
-    
   espocrm:
     image: espocrm/espocrm
     container_name: espocrm
     environment:
-      ESPOCRM_DATABASE_HOST: espocrm-docker-setup-ds-mysql-1
+      ESPOCRM_DATABASE_HOST: espomysql.mysql.database.azure.com
       ESPOCRM_DATABASE_USER: espoadmin
       ESPOCRM_DATABASE_PASSWORD: j
       ESPOCRM_ADMIN_USERNAME: admin
@@ -24,7 +16,7 @@ services:
     restart: always
     ports:
       - 8080:80
-      
+
   espocrm-daemon:
     image: espocrm/espocrm
     container_name: espocrm-daemon
@@ -51,3 +43,4 @@ services:
 volumes:
   mysql:
   espocrm:
+      

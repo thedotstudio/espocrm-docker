@@ -23,6 +23,9 @@
 - go to the url now and you should see the Espo running. login with username - `admin` and password - `password`
 
 
+## Major trick - make mysql connection from inside docker
+We used long running tunnel [read this](https://emmer.dev/blog/tunneling-a-database-connection-with-docker-compose/) to port forward from azure VM to mysql (I could have done it from local to). I was able to do that but I could not connect from app container to mysql container. with some attempt this would have worked but I chose to not fight this battle. it should be obvious but did not work. trying to change ESPOCRM_DATABASE_HOST and removing mysql container did not work either. One trick that I had to do to make tunneling work was adding the rsa private file to the authorized_keys. one issue with long tunneling is occasional reset of the connection which would have brought in some visible data loss issues. 
+Going ahead with VM way
 
 ## Refrences
 
@@ -30,4 +33,5 @@
 
 
 ## TODO
-[]use Azure CLI to create resource group and document 
+[ ] explore terraform for this setup. 
+
