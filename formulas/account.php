@@ -1,4 +1,11 @@
 $today = datetime\format(datetime\now(),'Asia/Kolkata', 'MM/DD/YYYY 00:00');
+if (foundationYear != null) {
+entity\setAttribute('yearOfFoundation', foundationYear);
+$thisYear = datetime\year(datetime\today());
+$age = $thisYear - yearOfFoundation;
+entity\setAttribute('age', $age);
+}
+
 if ($nfd != null){
 $nfd = datetime\format(nextFollowupDate,'Asia/Kolkata', 'MM/DD/YYYY 00:00');
 $diff = datetime\diff($nfd, $today, 'days');
@@ -21,7 +28,4 @@ $fuStatus= "Overdue for a Week";
             $fuStatus = "Long-term";
             }
             entity\setAttribute('followupStatus', $fuStatus);
-            $thisYear = datetime\year(datetime\today());
-            $age = $thisYear - yearOfFoundation;
-            entity\setAttribute('age', $age);
             }
